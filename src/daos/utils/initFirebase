@@ -1,0 +1,62 @@
+import admin from 'firebase-admin'
+import serviceAccount from '../serviceAccountKey.json' 
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+console.log('Firebase admin initialized');
+
+const db = admin.firestore();
+
+const products = [
+    {
+        "productName": "Iphone 12",
+        "SKU": 20103456,
+        "photoURL": "https://user-images.githubusercontent.com/63796774/175106135-03263dff-9b33-4b1c-9835-4e23c2e47ccf.jpeg",
+        "price": 1000,
+        "stock": 1
+    },
+    {
+        "productName": "Monitor",
+        "SKU": 20103457,
+        "photoURL": "https://user-images.githubusercontent.com/63796774/175106271-887d1db1-35c6-49db-a5a4-c417403ee402.jpeg",
+        "price": 1400,
+        "stock": 3
+    },
+
+];
+const carts = [
+    { products: []
+    },
+    { products: []
+    },
+    { products: []
+    },
+];
+
+async function createProducts() {
+  const productsCol = db.collection('products')
+  try{
+    products.map(async (product) => {
+        await productsCol.add(product)
+    })
+    console.log('Productos insertados');
+  }catch (error) {
+        console.log(error);
+    }
+}
+async function createCarts() {
+
+    const cartsCol = db.collection('carts')
+    try{
+        carts.map(async (carrito) => {
+            await cartsCol.add(carrito)
+        })
+        console.log('Carritos insertados');
+    }catch (error) {
+            console.log(error);
+        }
+}
+
+createProducts();
+createCarts();
